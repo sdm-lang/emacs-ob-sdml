@@ -3,7 +3,7 @@
 ;; Copyright (c) 2023, 2024 Simon Johnston
 
 ;; Author: Simon Johnston <johnstonskj@gmail.com>
-;; Version: 0.1.4
+;; Version: 0.1.5snapshot
 ;; Package-Requires: ((emacs "28.2") (org "9.5.5") (sdml-mode "0.1.6"))
 ;; URL: https://github.com/johnstonskj/emacs-sdml-mode
 ;; Keywords: languages tools
