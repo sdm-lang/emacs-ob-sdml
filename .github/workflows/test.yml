@@ -15,12 +15,6 @@ jobs:
 
     strategy:
       matrix:
-        package:
-          - flycheck-sdml
-          - ob-sdml
-          - sdml-fold
-          - sdml-ispell
-          - sdml-modesdml-model
         os: [ubuntu-latest]
         emacs_version: ['24.4', '24.5',
                         '25.1', '25.2', '25.3',
@@ -52,16 +46,13 @@ jobs:
 
     - name: Lint the project
       run: |
-        cd ${{matrix.package}}
         eldev $ELDEV_ARGS lint
 
     - name: Test the project
       run: |
-        cd ${{matrix.package}}
         eldev $ELDEV_ARGS -p --expect 10
         eldev $ELDEV_ARGS compile --warnings-as-errors
 
     - name: Ensure that copyright notices are up-to-date
       run: |
-        cd ${{matrix.package}}
         eldev $ELDEV_ARGS -p doctor up-to-date-copyright --all-tests

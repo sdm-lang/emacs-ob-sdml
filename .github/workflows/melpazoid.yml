@@ -4,15 +4,6 @@ on: [push, pull_request]
 
 jobs:
   melpazoid:
-    strategy:
-      matrix:
-        package:
-          - flycheck-sdml
-          - ob-sdml
-          - sdml-fold
-          - sdml-ispell
-          - sdml-modesdml-model
-           
     runs-on: ubuntu-latest
     
     steps:
@@ -31,10 +22,10 @@ jobs:
         git clone https://github.com/riscy/melpazoid.git ~/melpazoid
         pip install ~/melpazoid
 
-    - Name: Check Package ${{matrix/package}}
+    - Name: Check Package
       env:
         LOCAL_REPO: ${{ github.workspace }}
-        RECIPE: (${{matrix/package}} :fetcher github :repo "johnstonskj/emacs-sdml-mode" :files ("${{matrix/package}}/${{matrix/package}}.el"))
+        RECIPE: (ob-sdml :fetcher github :repo "sdm-lang/emacs-ob-sdml" :files ("ob-sdml.el"))
         # set this to false (or remove it) if the package isn't on MELPA:
         EXIST_OK: false
       run: |
