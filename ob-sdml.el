@@ -1,15 +1,15 @@
 ;;; ob-sdml.el --- Org-Babel for SDML -*- lexical-binding: t; -*-
 
-;; Copyright (c) 2023, 2024 Simon Johnston
-
 ;; Author: Simon Johnston <johnstonskj@gmail.com>
-;; Version: 0.1.5snapshot
-;; Package-Requires: ((emacs "28.2") (org "9.5.5") (sdml-mode "0.1.6"))
+;; Version: 0.1.5
+;; Package-Requires: ((emacs "28.2") (org "9.5.5") (sdml-mode "0.1.8"))
 ;; URL: https://github.com/johnstonskj/emacs-sdml-mode
 ;; Keywords: languages tools
 
 ;;; License:
 
+;; Copyright (c) 2023, 2024 Simon Johnston
+;;
 ;; Licensed under the Apache License, Version 2.0 (the "License");
 ;; you may not use this file except in compliance with the License.
 ;; You may obtain a copy of the License at
@@ -50,34 +50,14 @@
 (require 'org)
 (require 'ob)
 (require 'sdml-mode)
-
-(defcustom ob-sdml-cmd "sdml"
-  "Name of the command to use for processing SDML source.
-May be either a command in the path, like sdml
-or an absolute path name, like /usr/local/bin/sdml
-parameters may be used, like sdml -v."
-  :tag "Org Babel SDML command"
-  :type 'file
-  :group 'org-babel)
-
-(defcustom ob-sdml-log-filter 'errors
-  "The level of logging the `ob-sdml-cmd' command-line tool should emit."
-  :tag "Org Babel SDML log filter"
-  :type '(choice (const :tag "No Logging" none)
-                 (const :tag "Errors" errors)
-                 (const :tag "Warnings" warnings)
-                 (const :tag "Informational" information)
-                 (const :tag "Debugging" debugging)
-                 (const :tag "Tracing" tracing))
-  :group 'org-babel)
+(require 'sdml-mode-cli)
 
 (defcustom ob-sdml-no-color nil
-  "Disable color output from the `ob-sdml-cmd' command."
+  "Disable color output from the `sdml-mode-cli-name' command."
   :tag "Org Babel SDML color switch"
   :type `(choice (const :tag "Default" ,nil)
                  (const :tag "No Color" t))
   :group 'org-babel)
-
 
 (defvar org-babel-default-header-args:sdml
   '((:results . "file")
@@ -105,10 +85,13 @@ parameters may be used, like sdml -v."
 (defun org-babel-execute:sdml (body params)
   "Execute a block of SDML code with org-babel.
 The code to process is in BODY, the block parameters are in PARAMS.
-This function is called by `org-babel-execute-src-block'."
+This function is called by `org-babel-execute-src-block'.
+
+Note that this uses the variables `sdml-mode-cli-name' and
+`sdml-mode-cli-log-filter' in constructing the command-line to execute."
   (let* ((out-file (cdr (or (assoc :file params)
 			                (error "You need to specify a :file parameter"))))
-         (cmd (or (cdr (assoc :cmd params)) sdml-cli-name))
+         (cmd (or (cdr (assoc :cmd params)) sdml-mode-cli-name))
 	     (cmdline (cdr (assoc :cmdline params)))
          (output-format (if (and (string-prefix-p "draw" cmdline)
                                  (not (string-search "--output-format" cmdline)))
@@ -116,12 +99,12 @@ This function is called by `org-babel-execute-src-block'."
                           ""))
 	     (coding-system-for-read 'utf-8) ; use utf-8 with sub-processes
 	     (coding-system-for-write 'utf-8)
-	     (in-file (org-babel-temp-file (format "%s-" sdml-cli-name))))
+	     (in-file (org-babel-temp-file (format "%s-" sdml-mode-cli-name))))
     (let ((expanded-source (ob-sdml-expand-body body params)))
-      (message expanded-source)
       (with-temp-file in-file
         (insert expanded-source)))
     (let ((full-cmd-string (concat cmd
+                                   (format " --log-filter %s" (symbol-name sdml-mode-cli-log-filter))
          	                       " " cmdline
                                    output-format
 	                               " --output " (org-babel-process-file-name out-file)
@@ -136,10 +119,13 @@ This function is called by `org-babel-execute-src-block'."
   (error "SDML does not support sessions"))
 
 (defun ob-sdml-setup ()
-  "Set up language mapping for Babel."
+  "Set up SDML language mapping for Org-Babel."
   (add-to-list 'org-babel-load-languages '(sdml . t))
   (org-babel-do-load-languages 'org-babel-load-languages
                                org-babel-load-languages))
+
+;;;###autoload
+(ob-sdml-setup)
 
 (provide 'ob-sdml)
 
