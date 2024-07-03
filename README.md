@@ -19,11 +19,13 @@ First clone the Git repository to a local path.
 ```
 
 The following uses `use-package` but any equivalent package manager should work.
+Note that you will need to add the `'sdml` name to the org-babel language list.
 
 ```elisp
 (use-package ob-sdml
   :after (ob sdml-mode)
-  :load-path "/path/to/repo")
+  :load-path "/path/to/repo"
+  :init (add-to-list 'org-babel-load-languages '(sdml . t)))
 ```
 
 You will also need to install the SDML command-line tool to execute commands
@@ -73,7 +75,6 @@ command-line tool at all.
 module rentals is
   ;; ...
 end
-
 #+END_SRC
 ```
 

@@ -118,11 +118,10 @@ Note that this uses the variables `sdml-mode-cli-name' and
   "Return an error because sdml does not support sessions."
   (error "SDML does not support sessions"))
 
+;;;###autoload
 (defun ob-sdml-setup ()
   "Set up SDML language mapping for Org-Babel."
-  (add-to-list 'org-babel-load-languages '(sdml . t))
-  (org-babel-do-load-languages 'org-babel-load-languages
-                               org-babel-load-languages))
+  (add-to-list 'org-babel-load-languages '(sdml . t)))
 
 ;;;###autoload
 (ob-sdml-setup)
