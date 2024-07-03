@@ -15,6 +15,7 @@
 (setf eldev-release-allowed-branch "main"
       ;; default for `eldev-release-commit-message' is good.
       eldev-release-post-release-commit-message "Post-release version bump."
-      eldev-release-post-release-commit (lambda (version)
-                                          (let ((eldev-release-min-version-size 0))
-                                            (eldev-release-next-snapshot-version-unless-already-snapshot version))))
+      eldev-release-post-release-commit
+      (lambda (version)
+        (let ((eldev-release-min-version-size 3))
+          (eldev-release-next-snapshot-version-unless-already-snapshot version))))
