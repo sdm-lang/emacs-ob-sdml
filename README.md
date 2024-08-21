@@ -7,26 +7,17 @@ This package provides support for SDML (the [Simple Domain Modeling Language](ht
 
 ## Installing
 
-Currently the package is not published and so installation has to be done
-manually.
-
-### Install manually
-
-First clone the Git repository to a local path.
-
-```bash
-    git clone https://github.com/johnstonskj/emacs-ob-sdml.git
-```
-
-The following uses `use-package` but any equivalent package manager should work.
-Note that you will need to add the `'sdml` name to the org-babel language list.
+Install is easiest from MELPA, here's how with `use-package`. Note the hook clause
+to ensure this minor mode is always enabled for SDML source files.
 
 ```elisp
 (use-package ob-sdml
   :after (ob sdml-mode)
-  :load-path "/path/to/repo"
-  :init (add-to-list 'org-babel-load-languages '(sdml . t)))
+  :init (ob-sdml-setup))
 ```
+
+Or, interactively; `M-x package-install RET sdml-ispell RET` and then
+run `M-x ob-sdml-setup RET` to add SDML to the Babel list of languages.
 
 You will also need to install the SDML command-line tool to execute commands
 against source blocks.
@@ -92,12 +83,17 @@ parameters and has it's own results block as well.
 
 ## Contributing
 
-The packages in this repository should pass the standard package checks,
-including:
+This package includes an [Eldev](https://github.com/emacs-eldev/eldev) file and the following MUST be run before
+creating any PR.
 
-* `byte-compile-file`
-* `package-lint`
-* `checkdoc`
+- `eldev lint`
+- `eldev doctor`
+- `eldev package --load-before-compiling --stop-on-failure --warnings-as-errors`
+- `eldev test`
+- `eldev test --undercover auto,coveralls,merge,dontsent -U simplecov.json`
+- `eldev release -nU 9.9.9`
+
+The script [eldev-check.sh](https://gist.github.com/johnstonskj/6af5ef6866bfb1288f4962a6ba3ef418) may be useful to you if you do not have your own Eldev workflow.
 
 ## License
 

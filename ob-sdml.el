@@ -24,10 +24,25 @@
 
 ;;; Commentary:
 
-;; Provides Babel integration for SDML source blocks.  This relies on the
+;; Provides Org-Babel integration for SDML source blocks.  This relies on the
 ;; command-line tool `sdml' (https://github.com/johnstonskj/rust-sdml) to
 ;; run checkers, diagram generators, and conversion tools.
 ;;
+
+;; Install
+;;
+;; Install is easiest from MELPA, here's how with `use-package`. Note the hook clause
+;; to ensure this minor mode is always enabled for SDML source files.
+;;
+;; `(use-package ob-sdml
+;;   :after (ob sdml-mode)
+;;   :init (ob-sdml-setup))'
+;;
+;; Or, interactively; `M-x package-install RET sdml-ispell RET' and then
+;; run `M-x ob-sdml-setup RET' to add SDML to the Babel list of languages.
+;;
+;; You will also need to install the SDML command-line tool to execute commands
+;; against source blocks.
 
 ;; Usage
 ;;
@@ -121,10 +136,9 @@ Note that this uses the variables `sdml-mode-cli-name' and
 ;;;###autoload
 (defun ob-sdml-setup ()
   "Set up SDML language mapping for Org-Babel."
+  (interactive)
+  (message "Adding sdml to org-babel-load-languages")
   (add-to-list 'org-babel-load-languages '(sdml . t)))
-
-;;;###autoload
-(ob-sdml-setup)
 
 (provide 'ob-sdml)
 
