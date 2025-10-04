@@ -38,7 +38,7 @@
 ;;   :after (ob sdml-mode)
 ;;   :init (ob-sdml-setup))'
 ;;
-;; Or, interactively; `M-x package-install RET sdml-ispell RET' and then
+;; Or, interactively; `M-x package-install RET ob-sdml RET' and then
 ;; run `M-x ob-sdml-setup RET' to add SDML to the Babel list of languages.
 ;;
 ;; You will also need to install the SDML command-line tool to execute commands
@@ -64,7 +64,11 @@
 
 (require 'org)
 (require 'ob)
-(require 'sdml-mode)
+
+(if (>= (string-to-number emacs-version) 29)
+    (require 'sdml-ts-mode)
+  (require 'sdml-mode))
+
 (require 'sdml-mode-cli)
 
 (defcustom ob-sdml-no-color nil
