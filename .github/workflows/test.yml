@@ -28,7 +28,7 @@ jobs:
       uses: emacs-eldev/setup-eldev@v1
 
     - name: Check out the source code
-      uses: actions/checkout@v5
+      uses: actions/checkout@v6
 
     - name: Lint the project
       run: |
